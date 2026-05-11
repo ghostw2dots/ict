@@ -1,5 +1,5 @@
 /**
- * Siren Head - Main Application Logic
+ * Kalkudorm - Main Application Logic
  * Pure Vanilla JS, No Frameworks
  */
 
@@ -18,10 +18,10 @@ const App = (() => {
     };
 
     const STORAGE_KEYS = {
-        schedules: 'Siren Head_schedules',
-        notes: 'Siren Head_notes',
-        assignments: 'Siren Head_assignments',
-        settings: 'Siren Head_settings'
+        schedules: 'Kalkudorm_schedules',
+        notes: 'Kalkudorm_notes',
+        assignments: 'Kalkudorm_assignments',
+        settings: 'Kalkudorm_settings'
     };
 
     // --- Initialization ---
@@ -511,7 +511,7 @@ const App = (() => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Siren Head_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `Kalkudorm_backup_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
         showToast('Data exported');
     };
