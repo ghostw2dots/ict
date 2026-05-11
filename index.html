@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siren Head | Student Productivity</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons (Phosphor Icons for lightweight SVGs) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="ph ph-student"></i>
+                <span>Siren Head</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-target="dashboard">
+                    <i class="ph ph-squares-four"></i> Dashboard
+                </button>
+                <button class="nav-item" data-target="schedule">
+                    <i class="ph ph-calendar"></i> Schedule
+                </button>
+                <button class="nav-item" data-target="notes">
+                    <i class="ph ph-notebook"></i> Notes
+                </button>
+                <button class="nav-item" data-target="assignments">
+                    <i class="ph ph-check-square"></i> Assignments
+                </button>
+                <button class="nav-item" data-target="calendar">
+                    <i class="ph ph-calendar-blank"></i> Calendar
+                </button>
+                <button class="nav-item" data-target="settings">
+                    <i class="ph ph-gear"></i> Settings
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="pomodoro-mini">
+                    <span id="mini-timer">25:00</span>
+                    <button id="mini-timer-toggle"><i class="ph ph-play"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="page-title">Dashboard</h2>
+                <div class="user-actions">
+                    <button id="theme-toggle" aria-label="Toggle Dark Mode">
+                        <i class="ph ph-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Views -->
+            
+            <!-- 1. DASHBOARD VIEW -->
+            <section id="dashboard" class="view active">
+                <div class="dashboard-header">
+                    <div>
+                        <h1 id="greeting">Hello, Student!</h1>
+                        <p id="current-date">Loading date...</p>
+                    </div>
+                    <div class="quote-card">
+                        <p id="daily-quote">"The secret of getting ahead is getting started."</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="ph ph-books"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-notes">0</h3>
+                            <p>Total Notes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ph ph-clock-countdown"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-pending">0</h3>
+                            <p>Pending Tasks</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ph ph-chalkboard-teacher"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-classes">0</h3>
+                            <p>Classes Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <div class="panel">
+                        <h3>Today's Classes</h3>
+                        <ul id="dashboard-schedule-list" class="list-group">
+                            <!-- Populated by JS -->
+                            <li class="empty-state">No classes today.</li>
+                        </ul>
+                    </div>
+                    <div class="panel">
+                        <h3>Upcoming Assignments</h3>
+                        <ul id="dashboard-assignment-list" class="list-group">
+                            <!-- Populated by JS -->
+                            <li class="empty-state">No pending assignments.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SCHEDULE VIEW -->
+            <section id="schedule" class="view">
+                <div class="view-header">
+                    <h3>Weekly Schedule</h3>
+                    <button class="btn-primary" onclick="App.openModal('schedule-modal')">
+                        <i class="ph ph-plus"></i> Add Class
+                    </button>
+                </div>
+                <div class="schedule-grid" id="schedule-container">
+                    <!-- Generated by JS: Mon-Sun Columns -->
+                </div>
+            </section>
+
+            <!-- 3. NOTES VIEW -->
+            <section id="notes" class="view">
+                <div class="view-header">
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" id="note-search" placeholder="Search notes...">
+                    </div>
+                    <button class="btn-primary" onclick="App.openModal('note-modal')">
+                        <i class="ph ph-plus"></i> New Note
+                    </button>
+                </div>
+                <div class="notes-grid" id="notes-container">
+                    <!-- Notes Cards -->
+                </div>
+            </section>
+
+            <!-- 4. ASSIGNMENTS VIEW -->
+            <section id="assignments" class="view">
+                <div class="view-header">
+                    <div class="filters">
+                        <select id="assignment-filter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="App.openModal('assignment-modal')">
+                        <i class="ph ph-plus"></i> Add Assignment
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Subject</th>
+                                <th>Due Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignments-list">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. CALENDAR VIEW -->
+            <section id="calendar" class="view">
+                <div class="view-header">
+                    <h3 id="calendar-month-year">Month Year</h3>
+                    <div class="calendar-nav">
+                        <button id="prev-month"><i class="ph ph-caret-left"></i></button>
+                        <button id="next-month"><i class="ph ph-caret-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Days Header -->
+                    <div class="cal-day-name">Sun</div>
+                    <div class="cal-day-name">Mon</div>
+                    <div class="cal-day-name">Tue</div>
+                    <div class="cal-day-name">Wed</div>
+                    <div class="cal-day-name">Thu</div>
+                    <div class="cal-day-name">Fri</div>
+                    <div class="cal-day-name">Sat</div>
+                    <!-- Dates generated by JS -->
+                </div>
+            </section>
+
+            <!-- 6. SETTINGS VIEW -->
+            <section id="settings" class="view">
+                <div class="settings-container">
+                    <div class="setting-item">
+                        <h3>Appearance</h3>
+                        <p>Toggle between light and dark mode.</p>
+                        <button class="btn-secondary" id="settings-theme-toggle">Toggle Theme</button>
+                    </div>
+                    <div class="setting-item danger-zone">
+                        <h3>Data Management</h3>
+                        <p>Export your data to JSON or clear all local storage.</p>
+                        <div class="action-buttons">
+                            <button class="btn-secondary" onclick="App.exportData()">Export JSON</button>
+                            <button class="btn-secondary" onclick="document.getElementById('import-file').click()">Import JSON</button>
+                            <input type="file" id="import-file" hidden accept=".json">
+                            <button class="btn-danger" onclick="App.clearAllData()">Clear All Data</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Add/Edit Schedule Modal -->
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Class Schedule</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="schedule-form">
+                <input type="hidden" id="sched-id">
+                <div class="form-group">
+                    <label>Subject Name</label>
+                    <input type="text" id="sched-subject" required placeholder="e.g., Mathematics">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="sched-day" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="color" id="sched-color" value="#4f46e5">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="sched-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="sched-end" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Location/Room</label>
+                    <input type="text" id="sched-location" placeholder="e.g., Room 101">
+                </div>
+                <button type="submit" class="btn-primary full-width">Save Schedule</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Note Modal -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>Note Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="note-form">
+                <input type="hidden" id="note-id">
+                <div class="form-group">
+                    <input type="text" id="note-title" placeholder="Note Title" required style="font-size: 1.2rem; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="note-subject" placeholder="Subject Tag (e.g., Biology)">
+                </div>
+                <div class="form-group">
+                    <textarea id="note-content" placeholder="Write your notes here..." rows="10"></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="note-pinned"> Pin Note
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="App.exportNoteAsTxt()">Export .txt</button>
+                    <button type="submit" class="btn-primary">Save Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Assignment Modal -->
+    <div id="assignment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assignment Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="assignment-form">
+                <input type="hidden" id="assign-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="assign-title" required placeholder="e.g., Chapter 5 Quiz">
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="assign-subject" required placeholder="e.g., History">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="assign-due" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="assign-priority">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Save Assignment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
